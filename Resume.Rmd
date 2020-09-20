@@ -3,7 +3,7 @@ name: Thanasi Bakis
 email: "thanasibakis@gmail.com"
 github: thanasibakis
 date: "`r format(Sys.time(), '%B %Y')`"
-docname: résumé # or curriculum vitae
+docname: resume # or curriculum vitae
 output: vitae::awesomecv
 aboutme: Graduate student seeking an educational experience with machine learning and computer vision in the industry.
 ---
