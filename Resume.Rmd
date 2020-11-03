@@ -5,7 +5,7 @@ github: thanasibakis
 date: "`r format(Sys.time(), '%B %Y')`"
 docname: resume # or curriculum vitae
 output: vitae::awesomecv
-aboutme: Graduate student seeking an educational experience with machine learning and computer vision in the industry.
+aboutme: Graduate student seeking an educational experience with machine learning in the industry.
 ---
 
 ```{r setup, include=FALSE}
