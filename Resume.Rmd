@@ -11,9 +11,12 @@ aboutme: Graduate student seeking an educational experience with machine learnin
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-library(magrittr) # Also need tinytex, vitae, tidyverse in general
+# Also need tinytex, vitae
+library(tidyverse)
+library(glue)
 
-# Below we override a couple design choices of the template, because I like burgundy :)
+# Below we override a couple design choices of the template,
+# because I like burgundy :)
 ```
 
 \definecolor{burgundy}{HTML}{800020}
@@ -26,22 +29,26 @@ library(magrittr) # Also need tinytex, vitae, tidyverse in general
 # Education
 
 ```{r}
-coursework <- readxl::read_xlsx("entries.xlsx", sheet = "Coursework") %>% 
-  dplyr::filter(!is.na(Include)) %>%
-  dplyr::arrange(Course) %>%
-  dplyr::mutate(Course = glue::glue("\\textbf{(Course)}", .open = "(", .close = ")")) %>%
-  dplyr::mutate(Course = ifelse(is.na(Language), Course, glue::glue("{Course} in {Language}"))) %>%
-  dplyr::select(Degree, Course)
+coursework <- readxl::read_xlsx("entries.xlsx", sheet = "Coursework") %>%
+  filter(!is.na(Include)) %>%
+  arrange(Course) %>%
+  mutate(
+    Course = glue("\\textbf{(Course)}", .open = "(", .close = ")")
+  ) %>%
+  mutate(
+    Course = ifelse(is.na(Language), Course, glue("{Course} in {Language}"))
+  ) %>%
+  select(Degree, Course)
 
-readxl::read_xlsx("entries.xlsx", sheet = "Education") %>% 
-  dplyr::filter(!is.na(Include)) %>%
-  dplyr::arrange(desc(StartDate)) %>%
-  dplyr::mutate(
+readxl::read_xlsx("entries.xlsx", sheet = "Education") %>%
+  filter(!is.na(Include)) %>%
+  arrange(desc(StartDate)) %>%
+  mutate(
     StartDate = format(StartDate, "%Y"),
     EndDate   = format(EndDate,   "%y"),
-    Date      = glue::glue("{StartDate} - {EndDate}")
+    Date      = glue("{StartDate} - {EndDate}")
   ) %>%
-  dplyr::full_join(coursework, by = "Degree") %>%
+  full_join(coursework, by = "Degree") %>%
   vitae::detailed_entries(
     what  = Degree,
     when  = Date,
@@ -51,18 +58,19 @@ readxl::read_xlsx("entries.xlsx", sheet = "Education") %>%
     .protect = F
   )
 ```
+
 # Technical Experience
 
 ```{r}
 readxl::read_xlsx("entries.xlsx", sheet = "Technical Experience") %>%
-  dplyr::filter(!is.na(Include)) %>%
-  dplyr::arrange(desc(StartDate)) %>%
-  dplyr::mutate(
+  filter(!is.na(Include)) %>%
+  arrange(desc(StartDate)) %>%
+  mutate(
     StartDate = format(StartDate, "%b %Y"),
     EndDate   = format(EndDate,   "%b %Y"),
-    Date      = ifelse(is.na(EndDate), StartDate, glue::glue("{StartDate} - {EndDate}"))
+    Date      = ifelse(is.na(EndDate), StartDate, glue("{StartDate} - {EndDate}"))
   ) %>%
-  tidyr::pivot_longer(cols = c(Info1, Info2, Info3), values_to = "Info") %>%
+  pivot_longer(cols = c(Info1, Info2, Info3), values_to = "Info") %>%
   vitae::detailed_entries(
     what  = Position,
     when  = Date,
@@ -72,18 +80,20 @@ readxl::read_xlsx("entries.xlsx", sheet = "Technical Experience") %>%
   )
 ```
 
+\pagebreak
+
 # Non-Technical Experience
 
 ```{r}
-readxl::read_xlsx("entries.xlsx", sheet = "Non-Technical Experience") %>% 
-  dplyr::filter(!is.na(Include)) %>%
-  dplyr::arrange(desc(StartDate)) %>%
-  dplyr::mutate(
+readxl::read_xlsx("entries.xlsx", sheet = "Non-Technical Experience") %>%
+  filter(!is.na(Include)) %>%
+  arrange(desc(StartDate)) %>%
+  mutate(
     StartDate = format(StartDate, "%b %Y"),
     EndDate   = format(EndDate,   "%b %Y"),
-    Date      = ifelse(is.na(EndDate), StartDate, glue::glue("{StartDate} - {EndDate}"))
+    Date      = ifelse(is.na(EndDate), StartDate, glue("{StartDate} - {EndDate}"))
   ) %>%
-  tidyr::pivot_longer(cols = c(Info1, Info2, Info3), values_to = "Info") %>%
+  pivot_longer(cols = c(Info1, Info2, Info3), values_to = "Info") %>%
   vitae::detailed_entries(
     what  = Position,
     when  = Date,
@@ -96,9 +106,9 @@ readxl::read_xlsx("entries.xlsx", sheet = "Non-Technical Experience") %>%
 # GitHub Highlights
 
 ```{r}
-readxl::read_xlsx("entries.xlsx", sheet = "GitHub Highlights") %>% 
-  dplyr::filter(!is.na(Include)) %>%
-  dplyr::arrange(desc(Year)) %>%
+readxl::read_xlsx("entries.xlsx", sheet = "GitHub Highlights") %>%
+  filter(!is.na(Include)) %>%
+  arrange(desc(Year)) %>%
   vitae::detailed_entries(
     what  = Summary,
     when  = Year,
@@ -109,14 +119,14 @@ readxl::read_xlsx("entries.xlsx", sheet = "GitHub Highlights") %>%
 # Achievements
 
 ```{r}
-readxl::read_xlsx("entries.xlsx", sheet = "Achievements") %>% 
-  dplyr::filter(!is.na(Include)) %>%
-  dplyr::arrange(desc(StartDate)) %>%
-  dplyr::mutate(
-    Organization = ifelse(is.na(Details), Organization, glue::glue("{Organization} - {Details}")),
+readxl::read_xlsx("entries.xlsx", sheet = "Achievements") %>%
+  filter(!is.na(Include)) %>%
+  arrange(desc(StartDate)) %>%
+  mutate(
+    Organization = ifelse(is.na(Details), Organization, glue("{Organization} - {Details}")),
     StartDate    = format(StartDate, "%b %Y"),
     EndDate      = format(EndDate,   "%b %Y"),
-    Date         = ifelse(is.na(EndDate), StartDate, glue::glue("{StartDate} - {EndDate}"))
+    Date         = ifelse(is.na(EndDate), StartDate, glue("{StartDate} - {EndDate}"))
   ) %>%
   vitae::detailed_entries(
     what  = Title,
