@@ -10,7 +10,7 @@ This project is a data-driven approach to creating my resume.
 
 From an R prompt:
 
-```
+```r
 rmarkdown::render("Resume.Rmd")
 ```
 
